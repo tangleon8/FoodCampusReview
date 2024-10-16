@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMBC Dining</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css">
+
+</head>
+<body>
+    <header>
+	
+        <div class="header-container">
+            <img src="https://styleguide.umbc.edu/wp-content/uploads/sites/113/2019/03/UMBC-retriever-social-media.png" alt="UMBC Logo" class="logo">
+            <h1 class="header-title">UMBC Dining Experience</h1>
+        </div>
+    </header>
+
+    <main class="content">
+        <div class="filterbar">
+            <div class="filter-group">
+                <label for="rating">Average Rating of UMBC restaurants</label>
+                <select id="rating" class="rating-filter">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+            </div>
+        
+            <div class="filter-group">
+                <label for="price">Price of UMBC restaurants</label>
+                <select id="price" class="price-filter">
+                    <option value="">All Prices</option>
+                    <option value="3">$</option>
+                    <option value="6">$$</option>
+                    <option value="9">$$$</option>
+                    <option value="15">$$$$</option>
+                </select>
+            </div>
+        
+            <button class="filter-button">Filter Results</button>
+        </div>
+
+        <div class="restaurant-list-container">
+            <h2>UMBC Restaurants</h2>
+            <ul class="restaurant-list">
+                <li>True Grits (5)-$$$$</li>
+                <li>Halal Shack (4)-$$$</li>
+                <li>Copperhead Jacks (3)-$$</li>
+                <li>Chick-fil-A (4)-$$$$</li>
+                <li>Starbucks (5)-$$</li>
+                <li>The Coffee Shop (4)-$</li>
+                <li>Sushi Do (3)-$$$</li>
+                <li>Einstein Bagels (3)-$$$</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>© UMBC Dining Services</p>
+    </footer>
+</body>
+</html>
