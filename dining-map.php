@@ -5,10 +5,15 @@
 <title> Dining Map </title>
 <meta charset="UTF-8">
 <meta name="viewport" content="eidth=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="screen.css"/>
+<link rel="stylesheet" href="styles.css"/>
+
 </head>
 <body>
-    <h1>UMBC dining Map</h1>
+	<?php 
+    $pageTitle = 'Dining Map';
+    $headerTitle = 'UMBC Dining Map';
+    include 'header.php'; 
+    ?>
 	<div class="map-con">
 	<a href="https://dineoncampus.com/UMBC/">
 	   <img src="https://umbcactivistparkproject.weebly.com/uploads/1/3/2/1/132157361/2017-parking-map_orig.png" alt="Retrievers dining map" class="map" width="500" height="500">
@@ -75,4 +80,7 @@
 	   </ul>
 	</div>
 </body>
+<footer>
+	<p>© UMBC Dining Services</p>
+</footer>
 </html>
