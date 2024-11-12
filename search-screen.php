@@ -19,29 +19,33 @@ $query = "SELECT r.id, r.name, r.price_level, IFNULL(AVG(re.rating), 0) AS avg_r
           LEFT JOIN reviews re ON r.id = re.restaurant_id 
           WHERE 1 = 1";
 
+//Add a filter for rating if the number is higher than 0
 if ($rating_filter > 0) {
     $query .= " AND AVG(re.rating) >= $rating_filter";
 }
+
+//Add a filter for rating if the number is higher than 0
 if ($price_filter > 0) {
     $query .= " AND r.price_level <= $price_filter";
 }
 
+//Group by restaurant ID so each restaurant is placed once with the average rating
 $query .= " GROUP BY r.id";
 
-// Run the query directly (for debugging)
+// Run the query directly (
 $result = mysqli_query($db, $query);
 
+//Checks if it was successful
 if (!$result) {
     die("Error executing query: " . mysqli_error($db));  // Error message to help debug
 }
 
-// Store the fetched restaurants
+// Store the fetched restaurants by using an array
 $restaurants = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $restaurants[] = $row;
 }
 
-// Close the database connection
 mysqli_close($db);
 ?>
 
@@ -64,10 +68,11 @@ mysqli_close($db);
     <main class="content">
         <!-- Filter Form -->
         <div class="filterbar">
-            <form method="POST" action="">
+            <form method="POST" action=""> <!-- Form uses POST to submit data -->
                 <div class="filter-group">
                     <label for="rating">Average Rating of UMBC restaurants</label>
                     <select id="rating" name="rating" class="rating-filter">
+                        <!-- Display options for ratings -->
                         <option value="0">All Ratings</option>
                         <option value="5" <?= isset($_POST['rating']) && $_POST['rating'] == '5' ? 'selected' : '' ?>>5 Stars</option>
                         <option value="4" <?= isset($_POST['rating']) && $_POST['rating'] == '4' ? 'selected' : '' ?>>4 Stars</option>
@@ -80,6 +85,7 @@ mysqli_close($db);
                 <div class="filter-group">
                     <label for="price">Price of UMBC restaurants</label>
                     <select id="price" name="price" class="price-filter">
+                        <!-- Display options for prices -->
                         <option value="0">All Prices</option>
                         <option value="3" <?= isset($_POST['price']) && $_POST['price'] == '3' ? 'selected' : '' ?>>$</option>
                         <option value="6" <?= isset($_POST['price']) && $_POST['price'] == '6' ? 'selected' : '' ?>>$$</option>
@@ -96,14 +102,16 @@ mysqli_close($db);
         <div class="restaurant-list-container">
             <h2>UMBC Restaurants</h2>
             <ul class="restaurant-list">
+                 <!-- Check if the restaurants array is empty -->
                 <?php if (empty($restaurants)): ?>
                     <li>No restaurants found with the selected filters.</li>
                 <?php else: ?>
+                     <!-- Loop through each restaurant -->
                     <?php foreach ($restaurants as $restaurant): ?>
                     <li>
-                        <?= htmlspecialchars($restaurant['name']) ?> 
-                        (<?= (int)$restaurant['avg_rating'] ?> Stars) 
-                        - <?= str_repeat('$', (int)($restaurant['price_level'] / 3)) ?>
+                        <?= htmlspecialchars($restaurant['name']) ?> <!-- Shows name -->
+                        (<?= (int)$restaurant['avg_rating'] ?> Stars) <!-- Shows stars -->
+                        - <?= str_repeat('$', (int)($restaurant['price_level'] / 3)) ?> <!-- Price Level -->
                     </li>
                     <?php endforeach; ?>
                 <?php endif; ?>
