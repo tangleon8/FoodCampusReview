@@ -10,21 +10,11 @@
 </head>
 <body>
 <!--header for page -->
- <header>
-        <div class="header-container">
-            <img src="https://styleguide.umbc.edu/wp-content/uploads/sites/113/2019/03/UMBC-retriever-social-media.png" alt="UMBC Logo" class="logo">
-
-
-            <h1 class="header-title">UMBC Campus Food Review</h1>
-            <! --  Navigation menu with links so options are clickable to desired route    -->
-            <nav class="menu-dropdown">
-                <ul class="menu-list">
-                    <li><a href="profile.html">Profile</a></li>
-                    <li><a href="search-screen.html">Search/Filter</a></li>
-                    <li><a href="#">Options</a></li>
-                </ul>
-            </nav>
-        </div>
+<?php 
+$pageTitle = 'UMBC Restaurant Information Site';
+$headerTitle = 'UMBC Campus Food Review';
+include 'header.php'; 
+?>
         <table>
 		<!--creating column headers for restaurant, hours, and reviews on restaurant view screen -->
             <tr>
