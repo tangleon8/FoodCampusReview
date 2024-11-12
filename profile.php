@@ -45,23 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Dining Dashboard</title>
     <link rel="stylesheet" href="profile.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<?php 
+    $pageTitle = 'College Dining Dashboard';
+    $headerTitle = 'Welcome to Your Dining Account!';
+    include 'header.php'; 
+    ?>
+
     <div class="total">
-        <header>
-            <ul>
-                <li><a href="#">Profile</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Options</a></li>
-            </ul>
-            <h1>Welcome to Your Dining Account, <span id="username"><?php echo htmlspecialchars(isset($_SESSION['username']) ? $_SESSION['username'] : ''); ?></span>!</h1>
-            <form>
-                <input type="search" placeholder="Search">
-                <button type="submit">Search</button>
-            </form>
-            <img src="burger.jpg" alt="Burger" class="food-image" width="100" height="100">
-        </header>
         <section class="health">
             <h3>myHealth Advisor</h3>
             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
