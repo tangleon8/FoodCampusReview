@@ -142,7 +142,7 @@
             <section class="ratings">
 
                  <!--  Tables with each restaurant & rating    -->
-                <h2>UMBC Restaurants</h2>
+                <h2><a href="restaurant-info.php" class="view-restaurants">UMBC Restaurants</a></h2>
                 <div class="scrollable-table">
                     <table>
                         <thead>
@@ -164,7 +164,7 @@
                     </table>
                 </div>
             </section>
-            <a href="dining-map.html"><img src="https://mcac.umbc.edu/wp-content/uploads/sites/160/2015/12/UMBC-General-Campus-Map_website-2.jpg" alt="Campus Map" class="campus-map"></a>
+            <a href="dining-map.php"><img src="https://mcac.umbc.edu/wp-content/uploads/sites/160/2015/12/UMBC-General-Campus-Map_website-2.jpg" alt="Campus Map" class="campus-map"></a>
         </aside>
     </main>
 
