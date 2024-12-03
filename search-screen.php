@@ -1,54 +1,44 @@
 <?php
-session_start();
+session_start(); //Begins the session
 
-// Connect to the database
-$db = mysqli_connect("studentdb-maria.gl.umbc.edu", "leont1", "leont1", "leont1");
+$db = mysqli_connect("studentdb-maria.gl.umbc.edu", "leont1", "leont1", "leont1");// Connect to Leon's database
 
-// Check for connection errors
-if (mysqli_connect_errno()) {
-    die("Error - could not connect to MySQL: " . mysqli_connect_error());
-}
+$rating_filter = isset($_POST['rating']) ? (int)$_POST['rating'] : 0; //Filters form submission for rating
+$price_filter = isset($_POST['price']) ? (int)$_POST['price'] : 0; //Form submission for price
 
-// Initialize filters
-$rating_filter = isset($_POST['rating']) ? (int)$_POST['rating'] : 0;
-$price_filter = isset($_POST['price']) ? (int)$_POST['price'] : 0;
+//Populates the SQL query for gathering restaurant data with filtering
+$query = " 
+    SELECT r.id, r.name, r.price_level, IFNULL(avg_reviews.avg_rating, 0) AS avg_rating
+    FROM restaurants r
+    LEFT JOIN (
+        SELECT restaurant_id, AVG(rating) AS avg_rating
+        FROM reviews
+        GROUP BY restaurant_id
+    ) AS avg_reviews ON r.id = avg_reviews.restaurant_id
+    WHERE 1 = 1
+";
 
-// Build the SQL query dynamically based on filters
-$query = "SELECT r.id, r.name, r.price_level, IFNULL(AVG(re.rating), 0) AS avg_rating 
-          FROM restaurants r 
-          LEFT JOIN reviews re ON r.id = re.restaurant_id 
-          WHERE 1 = 1";
-
-//Add a filter for rating if the number is higher than 0
+// Adds conditions to the SQL query based on the user input
 if ($rating_filter > 0) {
-    $query .= " AND AVG(re.rating) >= $rating_filter";
+    $query .= " AND IFNULL(avg_reviews.avg_rating, 0) >= $rating_filter";
 }
-
-//Add a filter for rating if the number is higher than 0
 if ($price_filter > 0) {
     $query .= " AND r.price_level <= $price_filter";
 }
 
-//Group by restaurant ID so each restaurant is placed once with the average rating
-$query .= " GROUP BY r.id";
+$query .= " GROUP BY r.id";  //  one row per restaurant
 
-// Run the query directly (
 $result = mysqli_query($db, $query);
 
-//Checks if it was successful
-if (!$result) {
-    die("Error executing query: " . mysqli_error($db));  // Error message to help debug
-}
-
-// Store the fetched restaurants by using an array
+//Array to hold restaurant data
 $restaurants = [];
 while ($row = mysqli_fetch_assoc($result)) {
     $restaurants[] = $row;
 }
 
 mysqli_close($db);
-?>
 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -56,6 +46,28 @@ mysqli_close($db);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UMBC Dining</title>
     <link rel="stylesheet" href="styles.css">
+	<script>
+	window.onload = pageLoad;
+	//this javascript function to validate user input
+	function validateinput(entry) {
+	//gets values of rating and prices
+	var rating = document.getElementById("rating").value;
+	var price = document.getElementById("price").value;
+	
+	var errorMessage = "";
+	
+	//this checks whether the rating or price are valid
+	if (rating =="0" && price =="0") {
+	    errorMessage ="Select atleast one of the filters either being rating or price";
+		}
+	//this line of code is if there is an error message that pops up or not
+	if (errorMessage) {
+	     document.getElementById("errormessage").innerText = errorMessage;
+		 return false;
+		 }
+		 return true;
+		}
+		</script>
 </head>
 <body>
     <header>
@@ -68,11 +80,11 @@ mysqli_close($db);
     <main class="content">
         <!-- Filter Form -->
         <div class="filterbar">
-            <form method="POST" action=""> <!-- Form uses POST to submit data -->
+            <form method="POST" action="" onsubmit="return validateinput(event)">
                 <div class="filter-group">
-                    <label for="rating">Average Rating of UMBC restaurants</label>
-                    <select id="rating" name="rating" class="rating-filter">
-                        <!-- Display options for ratings -->
+                    <label for="rating">Average Rating of UMBC Restaurants</label>
+                    <select id="rating" name="rating">
+                        <!-- Options for specific ratings with PHP to retain the selected value -->
                         <option value="0">All Ratings</option>
                         <option value="5" <?= isset($_POST['rating']) && $_POST['rating'] == '5' ? 'selected' : '' ?>>5 Stars</option>
                         <option value="4" <?= isset($_POST['rating']) && $_POST['rating'] == '4' ? 'selected' : '' ?>>4 Stars</option>
@@ -82,36 +94,42 @@ mysqli_close($db);
                     </select>
                 </div>
 
+                <!-- Filter group for choosing price leve -->
                 <div class="filter-group">
-                    <label for="price">Price of UMBC restaurants</label>
-                    <select id="price" name="price" class="price-filter">
-                        <!-- Display options for prices -->
+                    <label for="price">Price of UMBC Restaurants</label>
+
+                    <!--Dropdowjn for selecting price level -->
+                    <select id="price" name="price">
+
+                        <!-- Options for the specific price levels with PHP to retain the selected price -->
                         <option value="0">All Prices</option>
-                        <option value="3" <?= isset($_POST['price']) && $_POST['price'] == '3' ? 'selected' : '' ?>>$</option>
-                        <option value="6" <?= isset($_POST['price']) && $_POST['price'] == '6' ? 'selected' : '' ?>>$$</option>
-                        <option value="9" <?= isset($_POST['price']) && $_POST['price'] == '9' ? 'selected' : '' ?>>$$$</option>
-                        <option value="15" <?= isset($_POST['price']) && $_POST['price'] == '15' ? 'selected' : '' ?>>$$$$</option>
+                        <option value="5" <?= isset($_POST['price']) && $_POST['price'] == '5' ? 'selected' : '' ?>>$</option>
+                        <option value="10" <?= isset($_POST['price']) && $_POST['price'] == '10' ? 'selected' : '' ?>>$$</option>
+                        <option value="15" <?= isset($_POST['price']) && $_POST['price'] == '15' ? 'selected' : '' ?>>$$$</option>
                     </select>
                 </div>
 
                 <button type="submit" class="filter-button">Filter Results</button>
             </form>
+			<div id="errormessage" style="color: 0000Ff"></div>
         </div>
 
         <!-- Restaurant List -->
         <div class="restaurant-list-container">
             <h2>UMBC Restaurants</h2>
             <ul class="restaurant-list">
-                 <!-- Check if the restaurants array is empty -->
+
+                <!-- PHP conditional to show message if no restaurants match the filters -->
                 <?php if (empty($restaurants)): ?>
                     <li>No restaurants found with the selected filters.</li>
                 <?php else: ?>
-                     <!-- Loop through each restaurant -->
+
+                    <!-- The foreach loops through the restaurant to display the details -->
                     <?php foreach ($restaurants as $restaurant): ?>
                     <li>
-                        <?= htmlspecialchars($restaurant['name']) ?> <!-- Shows name -->
-                        (<?= (int)$restaurant['avg_rating'] ?> Stars) <!-- Shows stars -->
-                        - <?= str_repeat('$', (int)($restaurant['price_level'] / 3)) ?> <!-- Price Level -->
+                        <?= htmlspecialchars($restaurant['name']) ?> 
+                        (<?= round($restaurant['avg_rating'], 1) ?> Stars) 
+                        - <?= str_repeat('$', (int)($restaurant['price_level'] / 5)) ?>
                     </li>
                     <?php endforeach; ?>
                 <?php endif; ?>
