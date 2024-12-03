@@ -287,3 +287,29 @@ footer {
     bottom: 0;
     width: 100%;
 }
+.menu-list a.active {
+    background-color: #fdb515;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.review-item {
+    background-color: #000; 
+    color: #fdb515; 
+    border: 2px solid #fdb515; 
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.rating {
+    color: #fdb515;
+}
+
+.sort-options select {
+    background-color: #000; 
+    color: #fdb515; 
+    border: 1px solid #fdb515; 
+    padding: 5px;
+    border-radius: 5px;
+}
